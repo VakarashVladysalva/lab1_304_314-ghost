@@ -1,0 +1,284 @@
+// лб 3.3.cpp 
+//
+
+#include <iostream>
+#include <Windows.h>
+
+using namespace std;
+
+class matrix
+{
+	short** v;
+	int column, line;
+	int state;
+public:
+	//matrix() : v(NULL), column(0) , line(0), state(0) {}
+	matrix();
+	matrix(int n);
+	matrix(int n, int m, short&);//
+	matrix(int n, int m, short** p);
+	matrix(const matrix& s);
+	matrix& operator=(const matrix& s);
+	~matrix()
+	{
+		cout << " del vec";
+		if (v)
+		{
+			for (int i = 0; i < line; i++)
+			{
+				delete[] v[i];
+			}
+			delete[] v;
+		}
+	}
+	short getV(int i, int j)
+	{
+		return v[i][j];
+	}
+	void default_(int i, int j);
+	void foo(short x);
+	void Output();
+	void Input();
+	matrix Add(matrix& b);
+	matrix minus_(matrix& b);
+	matrix multiplication(matrix& b);
+	boolean more(short x, short x1);
+	boolean equal(short x, short x1);
+};
+matrix::matrix() 
+{
+	column = 4; line = 4;
+	v = new short*[line];
+	for (int i = 0; i < line; i++)
+	{
+		v[i] = new short [column];
+	}
+	v = NULL; column = 0; line = 0; state = 0;
+}
+matrix::matrix(int n)
+{
+	if (n <= 0)
+	{
+		v = NULL; column = 0; line = 0; state = -1; cout << " Vec --> 0 ";
+	}
+	column = n; line = n;
+	v = new short* [line];
+	for (int i = 0; i < line; i++)
+	{
+		v[i] = new short[column];
+	}
+	for (int i = 0; i < line; i++)for (int j = 0; j < column; j++)v[i][j] = 0;
+}
+
+matrix::matrix(int n, int m, short& b) 
+{
+	if (n <= 0 && m <=0) { v = NULL; column = 0; line = 0; state = -1; cout << " Vec --> 0 "; }
+	column = n; line = n;
+	v = new short* [line];
+
+	for (int i = 0; i < line; i++)
+	{
+		v[i] = new short[column];
+	}
+
+	for (int i = 0; i < line; i++)for (int j = 0; j < column; j++)v[i][j] = b;
+}
+
+matrix::matrix(int n, int m, short** p)
+{
+	if ( (n <= 0 && m <=0) || p == NULL) { v = NULL; column = 0; line = 0; state = -1; cout << " Vec --> 0 "; }
+	line = n; column = m;
+	v = new short* [line];
+
+	for (int i = 0; i < line; i++)
+	{
+		v[i] = new short[column];
+	}
+
+	for (int i = 0; i < line; i++)for (int j = 0; j < column; j++)v[i][j] = p[i][j];
+}
+matrix::matrix(const matrix& s) {
+	line = s.line; column = s.column;
+	v = new short* [line];
+
+	for (int i = 0; i < line; i++)
+	{
+		v[i] = new short[column];
+	}
+	state = 0;
+	for (int i = 0; i < line; i++)for (int j = 0; j < column; j++)v[i][j] = s.v[i][j];
+}
+matrix& matrix::operator=(const matrix& s) {
+	if (line != s.line || column != s.column)
+	{
+		if (v)
+		{
+			for (int i = 0; i < line; i++)
+			{
+				delete[] v[i];
+			}
+			delete[] v;
+		}
+		line = s.line; column = s.column;
+		v = new short* [line];
+		for (int i = 0; i < line; i++)
+		{
+			v[i] = new short[column];
+		}
+		state = 0;
+	}
+	for (int i = 0; i < line; i++)for (int j = 0; j < column; j++)v[i][j] = s.v[i][j];
+	return *this;
+}
+void matrix::default_(int i, int j)
+{
+	v[i][j] = 5;
+}
+void matrix::foo(short x)
+{
+	cout << x;
+}
+void matrix::Input()
+{
+
+	if (line == 0 || column ==0)
+	{
+		if (v)
+		{
+			for (int i = 0; i < line; i++)
+			{
+				delete[] v[i];
+			}
+			delete[] v;
+		}
+		
+		cout << "Введіть кількість рядків: "; cin >> line;
+		cout << "\nВведіть кількiсть стовбців: "; cin >> column;
+	
+		v = new short*[line];
+		for (int i = 0; i < line; i++)
+		{
+			v[i] = new short[column];
+		}
+	}
+	for (int i = 0; i < line; i++) for ( int j = 0; j < column; j++)
+	{
+		cout << " v [ " << i << " ][ "<<j<<" ]: "; cin >> v[i][j];
+	}
+}
+void matrix::Output()
+{
+	if (line != 0 && column !=0)
+	{
+		for (int i = 0; i < line; i++)for( int j = 0; j < column; j++ )
+		{
+			cout << " v [ " << i << " ][ "<< j<<" ]: " << v[i][j] << '\t';
+			cout << endl;
+		}
+	}
+}
+matrix matrix::Add(matrix& b) {
+	int tline, tcolumn, n;
+	tline = line < b.line ? line : b.line;
+	tcolumn = column < b.column ? column : b.column;
+	if (tline >=0 && tcolumn >= 0)
+	{
+		if (tline < tcolumn)n = tline;
+		else n = tcolumn;
+		matrix tmp(n);
+		for (int i = 0; i < n; i++)for (int j = 0; j < n; j++) tmp.v[i][j] = v[i][j] + b.v[i][j];
+		return tmp;
+	}
+	return matrix(0);
+}
+matrix matrix::minus_(matrix& b) {
+	int tline, tcolumn, n;
+	tline = line < b.line ? line : b.line;
+	tcolumn = column < b.column ? column : b.column;
+	if (tline >= 0 && tcolumn >= 0)
+	{
+		if (tline < tcolumn)n = tline;
+		else n = tcolumn;
+		matrix tmp(n);
+		for (int i = 0; i < n; i++) for (int j = 0; j < n; j++) tmp.v[i][j] = v[i][j] - b.v[i][j];
+		return tmp;
+	}
+	return matrix(0);
+}
+matrix matrix::multiplication(matrix& b)
+{
+	int tline, tcolumn, n;
+	tline = line < b.line ? line : b.line;
+	tcolumn = column < b.column ? column : b.column;
+	if (tline >= 0 && tcolumn >= 0)
+	{
+		if (tline < tcolumn)n = tline;
+		else n = tcolumn;
+		matrix tmp(n);
+		for (int i = 0; i < n; i++)for (int j = 0; j < n; j++) tmp.v[i][j] = v[i][j] * b.v[i][j];
+		return tmp;
+	}
+	return matrix(0);
+}
+boolean matrix::more(short x, short x1)
+{
+	if (x > x1)return true;
+	else return false;
+}
+
+boolean matrix::equal(short x, short x1)
+{
+	if (x == x1)return true;
+	else return false;
+}
+
+void main(int argc, TCHAR* argv[])
+{
+	SetConsoleCP(1251);
+	SetConsoleOutputCP(1251);
+	short a, b, c;
+	a = 1;
+	b = 22;
+	matrix VecObj, VecObj1(3), VecObj2(2);
+	cout << "VecObj \n";
+	VecObj.Output();
+	
+	cout << "VecObj1 \n";
+	VecObj1.Output();
+	VecObj2.default_(0,0);
+	cout << "VecObj2 \n";
+	VecObj2.Output();
+	VecObj2.foo(VecObj2.getV(1,0));
+	cout << "\n//" << VecObj2.getV(0,1) << "//\n";
+	cout << " Input a " << endl;
+	cin >> a;
+	matrix VecObj3(3,3, a);
+
+	cout << endl;
+	
+	VecObj3.Output();
+	VecObj.Input();
+	cout << "\n===========\n";
+	cout << endl;
+	VecObj.Output();
+	VecObj1 = VecObj.Add(VecObj3);
+	cout << endl;
+	VecObj1.Output();
+
+	VecObj1 = VecObj.multiplication(VecObj3);
+	cout << endl;
+	VecObj1.Output();
+
+	VecObj1 = VecObj.minus_(VecObj3);
+	cout << endl;
+	VecObj1.Output();
+	cout << endl << VecObj.getV(0,1) << " > " << VecObj3.getV(0,1) << " - ";
+	if (VecObj.more(VecObj.getV(0,1), VecObj3.getV(0,1)))cout << "true" << endl;
+	else cout << "false" << endl;
+	cout << endl << VecObj.getV(0,0) << " = " << VecObj3.getV(0,0) << " - ";
+	if (VecObj.equal(VecObj.getV(0,0), VecObj3.getV(0,0)))cout << "true" << endl;
+	else cout << "false" << endl;
+
+}
+
+
