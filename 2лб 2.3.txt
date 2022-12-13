@@ -1,0 +1,73 @@
+// 2лб 2.3.cpp 
+//
+
+#include <iostream>
+#include <string>
+#include <ctime>
+#include <conio.h>
+
+using namespace std;
+
+int main()
+{
+    SetConsoleCP(1251);
+    SetConsoleOutputCP(1251);
+    srand(time(NULL));
+    int nsize, l1[3], l2[3], number, stop = 1, n, x;
+    static const double fraction = 1.0 / (static_cast<double>(RAND_MAX) + 1.0);
+    x = static_cast<int>(rand() * fraction * (999 - 100 + 1) + 100);
+    cout << "Комп’ютер задумав трьохзначне число. Ви повинні його відгадати." << endl << "Після вводу числа натисніть <Enter>." << endl << "Для завершення гри натисніть <Esc>." << endl;
+    //cout << "Число: " << x << endl;
+    while (stop == 1)
+    {
+  
+        if (_getch() == 27)
+        {
+            exit(0);
+        }
+        nsize = 0; n = 0;
+        l1[0] = x / 100;
+        l1[1] = x % 100 / 10;
+        l1[2] = x % 10;
+        cout << "Ваш варіант -> ";
+        cin >> number;
+        l2[0] = number / 100;
+        l2[1] = number % 100 / 10;
+        l2[2] = number % 10;
+
+        for (int i = 0; i < 3; i++)
+        {
+            if (l1[i] == l2[i])
+            {
+                nsize++;
+                n++;
+                l2[i] = -1;
+                l1[i] = -2;
+            }
+        }
+
+        for (int i = 0; i < 3; i++)
+        {
+            for (int j = 0; j < 3; j++)
+            {
+                if (l1[i] == l2[j])
+                {
+                    if (i == j)nsize++;
+                    n++;
+                    l2[j] = -1;
+                    break;
+
+
+                }
+            }
+        }
+
+
+        cout << "Вгадано: " << n << ". На своїх позиціях: " << nsize << endl;
+        if (nsize == 3)stop = 0;
+        
+    }
+    cout << " ВИ ВГАДАЛИ! ";
+}
+
+

@@ -1,0 +1,54 @@
+// 2лб 2.2.cpp 
+//
+
+#include <iostream>
+
+using namespace std;
+
+int main()
+{
+    SetConsoleCP(1251);
+    SetConsoleOutputCP(1251);
+    int n, line = 0, column = 0, diagonal1 = 0, diagonal2 = 0, size = 0, index = 0;
+    cout << "Введіть розмір матриці: "; cin >> n;
+    int** l = new  int* [n];
+    for (int i = 0; i < n; i++)l[i] = new int[n];
+    int* numbers = new int[n * n + 2];
+    cout << "Заповніть матрицю" << endl;
+    for (int i = 0; i < n; i++)for (int j = 0; j < n; j++)cin >> l[i][j];
+
+    for (int i = 0; i < n; i++)
+    {
+        for (int j = 0; j < n; j++)
+        {
+            line += l[i][j];
+            column += l[j][i];
+        }
+        numbers[size] = line; line = 0; size++;
+        numbers[size] = column; column = 0; size++;
+    }
+    for (int i = 0; i < n; i++)
+    {
+        diagonal1 += l[i][i];
+        diagonal2 += l[n-i-1][n-i-1];   
+    }
+    numbers[size] = diagonal1; size++;
+    numbers[size] = diagonal2;
+    for (int i = 1; i < size; i++)
+    {
+        if (numbers[0] != numbers[i])
+        {
+            index--;
+            break;
+        }
+    }
+    //cout <<"index = "<< index<<endl;
+    //cout << "size = " << size << endl;
+    if (index == 0)cout << "Матриця є магічною";
+    else cout << "Матриця не є магічною";
+
+    for (int i = 0; i < n; i++)delete[] l[i];
+    delete[] l;
+    delete[] numbers;
+}
+

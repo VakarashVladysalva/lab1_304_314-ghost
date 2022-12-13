@@ -1,0 +1,64 @@
+// 2лб 2.4.cpp 
+//
+
+#include <iostream>
+
+using namespace std;
+
+int main()
+{
+    SetConsoleCP(1251);
+    SetConsoleOutputCP(1251);
+    char l[67] = "абвгґдеєжзиіїйклмнопрстуфхцчшщюяьАБВГҐДЕЄЖЗИІЇЙКЛМНОПРСТУФХЦЧШЩЮЯЬ";
+    char l1[33][6] = { "*-","-**","*--","****","--*","-**","*","**-**","***-","--**","-*--","**","*---*","*---","-*-","*-**","--","-*","---","*--*","*-*","***","-","**-","**-*","----","-*-*","---*","--*-","--*--","**--","*-*-","-**-"};
+    char l2[200], res[200][6];
+    int n = 0;
+    cout << "Введіть текст: ";
+    gets_s(l2);
+    for (int i = 0; i < strlen(l2); i++)for (int j = 0; j < 66; j++)
+    {
+        if (l2[i] == l[j])
+        {
+            if (j < 33)
+            {
+                for (int k = 0; k < strlen(l1[j]); k++)
+                {
+                    if (k == strlen(l1[j]) - 1)res[n][k + 1] = '\0';
+                    res[n][k] = l1[j][k];
+                }
+            }
+            else
+            {
+                for (int k = 0; k < strlen(l1[j-33]); k++)res[n][k] = l1[j-33][k];
+                for (int k = 0; k < strlen(l1[j-33]); k++)
+                {
+                    if (k == strlen(l1[j-33]) - 1)res[n][k + 1] = '\0';
+                    res[n][k] = l1[j-33][k];
+                }
+            }
+            n++;
+        }
+    }
+   
+   
+    for (int j = 0; j < n; j++)
+    {
+        for (int i = 0; i < n; i++)
+        {
+
+            
+            if (res[j][i] == '*')
+            {
+                Beep(2216, 106);
+                cout << res[j][i];
+            }
+            else if (res[j][i] == '-')
+            {
+                Beep(2216, 233);
+                cout << res[j][i];
+            }
+        }
+        cout << " ";
+    }
+}
+
